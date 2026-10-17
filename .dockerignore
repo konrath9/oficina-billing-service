@@ -1,0 +1,9 @@
+**/bin/
+**/obj/
+**/.vs/
+**/TestResults/
+.git/
+.github/
+k8s/
+OficinaBilling.Tests/
+README.md

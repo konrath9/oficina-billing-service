@@ -1,0 +1,63 @@
+services:
+  postgres-billing:
+    image: postgres:16-alpine
+    container_name: oficina_billing_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: oficina_billing
+    ports:
+      - "5434:5432"
+    volumes:
+      - billing_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: oficina_rabbitmq
+    restart: always
+    environment:
+      RABBITMQ_DEFAULT_USER: oficina
+      RABBITMQ_DEFAULT_PASS: oficina123
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  billing-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: oficina_billing_api
+    restart: always
+    ports:
+      - "5001:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: "Host=postgres-billing;Port=5432;Database=oficina_billing;Username=postgres;Password=postgres"
+      Jwt__SecretKey: "OficinaMecanica@SecretKey#2024!MustBe32CharsMin"
+      Jwt__Issuer: "OficinaMecanicaAPI"
+      Jwt__Audience: "OficinaMecanicaClients"
+      RabbitMq__Host: rabbitmq
+      RabbitMq__Username: oficina
+      RabbitMq__Password: oficina123
+      MercadoPago__AccessToken: ""        # vazio = gateway fake
+      MercadoPago__NotificationUrl: ""
+    depends_on:
+      postgres-billing:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+volumes:
+  billing_postgres_data:
+    driver: local
