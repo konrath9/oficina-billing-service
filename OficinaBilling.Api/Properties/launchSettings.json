@@ -1,0 +1,13 @@
+{
+  "profiles": {
+    "OficinaBilling.Api": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "billing/swagger",
+      "applicationUrl": "http://localhost:5001",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}
