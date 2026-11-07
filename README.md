@@ -1,5 +1,11 @@
 # Oficina Mecânica — Billing Service
 
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=konrath9_oficina-billing-service&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=konrath9_oficina-billing-service)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=konrath9_oficina-billing-service&metric=coverage)](https://sonarcloud.io/summary/new_code?id=konrath9_oficina-billing-service)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=konrath9_oficina-billing-service&metric=bugs)](https://sonarcloud.io/summary/new_code?id=konrath9_oficina-billing-service)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=konrath9_oficina-billing-service&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=konrath9_oficina-billing-service)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=konrath9_oficina-billing-service&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=konrath9_oficina-billing-service)
+
 Microsserviço de **orçamento e pagamento** do sistema da oficina mecânica (FIAP Tech Challenge — Fase 4).
 Nasceu da quebra do monólito [`konrath9/OficinaMecanica`](https://github.com/konrath9/OficinaMecanica) em três serviços:
 
@@ -11,9 +17,6 @@ Nasceu da quebra do monólito [`konrath9/OficinaMecanica`](https://github.com/ko
 
 Contratos de mensageria: [`docs/fase4/contratos-mensageria.md`](https://github.com/konrath9/OficinaMecanica/blob/master/docs/fase4/contratos-mensageria.md)
 (cópia local em [`OficinaBilling.Api/Contracts/Mensagens.cs`](OficinaBilling.Api/Contracts/Mensagens.cs), namespace `OficinaMecanica.Contracts`).
-
-<!-- SonarCloud: substituir pelo badge/print após criar o projeto konrath9_oficina-billing-service -->
-> **SonarCloud:** _[badge / print do Quality Gate aqui]_
 
 ## Arquitetura
 
@@ -122,7 +125,7 @@ de qualquer módulo ficar abaixo de 80%.
 | OficinaBilling.Domain | 100% | 100% | 100% |
 | **Total** | **98,48%** | **93,07%** | **94,73%** |
 
-> **SonarCloud:** _[print da análise / Quality Gate aqui]_
+> **SonarCloud:** análise e Quality Gate em [sonarcloud.io](https://sonarcloud.io/summary/new_code?id=konrath9_oficina-billing-service).
 
 ## CI/CD
 
