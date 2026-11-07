@@ -15,6 +15,7 @@ spec:
       labels:
         app: oficina-billing-service
     spec:
+      automountServiceAccountToken: false
       containers:
         - name: api
           image: ghcr.io/konrath9/oficina-billing-service:latest
