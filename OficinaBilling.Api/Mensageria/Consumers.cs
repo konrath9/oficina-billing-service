@@ -105,7 +105,9 @@ public class EstornarPagamentoConsumer(BillingDbContext db, IGatewayPagamento ga
         if (pagamento.Status != StatusPagamento.Estornado)
         {
             pagamento.Estornar(m.Motivo); // valida a transição (só Aprovado) antes de chamar o gateway
-            await gateway.EstornarAsync(pagamento.GatewayId!, context.CancellationToken);
+            // Sem payment id = aprovado por simulação, nada foi cobrado no gateway.
+            if (pagamento.GatewayId is not null)
+                await gateway.EstornarAsync(pagamento.GatewayId, context.CancellationToken);
             BillingMetrics.PagamentosEstornados.Add(1);
         }
 
