@@ -1,5 +1,14 @@
 # Postgres simples, SOMENTE para o cluster kind efemero do CI (sem volume persistente).
 # Em producao o banco e o RDS (connection string vem do Secret gerado no deploy).
+apiVersion: v1
+kind: Secret
+metadata:
+  name: postgres-billing-ci
+  namespace: oficina-mecanica
+type: Opaque
+stringData:
+  POSTGRES_PASSWORD: postgres # banco descartavel do kind de CI
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -15,6 +24,7 @@ spec:
       labels:
         app: postgres-billing
     spec:
+      automountServiceAccountToken: false
       containers:
         - name: postgres
           image: postgres:16-alpine
@@ -22,11 +32,22 @@ spec:
             - name: POSTGRES_USER
               value: postgres
             - name: POSTGRES_PASSWORD
-              value: postgres
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-billing-ci
+                  key: POSTGRES_PASSWORD
             - name: POSTGRES_DB
               value: oficina_billing
           ports:
             - containerPort: 5432
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+              ephemeral-storage: "1Gi"
           readinessProbe:
             exec:
               command: ["pg_isready", "-U", "postgres"]
