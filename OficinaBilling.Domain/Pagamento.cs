@@ -24,7 +24,10 @@ public class Pagamento
     public decimal Valor { get; private set; }
     public StatusPagamento Status { get; private set; }
 
-    /// <summary>Id no gateway: preference id ao criar a cobrança; payment id do Mercado Pago após a confirmação.</summary>
+    /// <summary>
+    /// Id no gateway: preference id ao criar a cobrança; payment id do Mercado Pago após a confirmação.
+    /// Nulo depois de aprovado = aprovado sem cobrança no gateway (simulação), então não há o que estornar lá.
+    /// </summary>
     public string? GatewayId { get; private set; }
     public string? LinkPagamento { get; private set; }
     public DateTime CriadoEm { get; private set; }
@@ -42,7 +45,8 @@ public class Pagamento
     public void Aprovar(string? gatewayPaymentId = null)
     {
         GarantirStatus(StatusPagamento.Pendente, "ser aprovado");
-        if (!string.IsNullOrWhiteSpace(gatewayPaymentId)) GatewayId = gatewayPaymentId;
+        // O preference id não serve para estorno (o refund exige o payment id), então não é mantido.
+        GatewayId = string.IsNullOrWhiteSpace(gatewayPaymentId) ? null : gatewayPaymentId;
         Mudar(StatusPagamento.Aprovado, null);
     }
 

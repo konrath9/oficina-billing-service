@@ -74,12 +74,12 @@ public class PagamentoTests
     }
 
     [Fact]
-    public void Aprovar_sem_payment_id_mantem_gateway_id()
+    public void Aprovar_sem_payment_id_indica_que_nada_foi_cobrado_no_gateway()
     {
         var p = Novo();
         p.DefinirCobranca("pref-1", null);
         p.Aprovar();
-        Assert.Equal("pref-1", p.GatewayId);
+        Assert.Null(p.GatewayId);
     }
 
     [Fact]

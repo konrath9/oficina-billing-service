@@ -206,6 +206,25 @@ public class ConsumerTests : IAsyncLifetime
     }
 
     [Fact]
+    public async Task EstornarPagamento_aprovado_por_simulacao_estorna_sem_chamar_gateway()
+    {
+        // Gateway real configurado, mas o pagamento foi aprovado via /simular: só existe o preference id,
+        // que o refund do Mercado Pago não aceita. A Saga não pode ficar presa em Estornando.
+        var pagamento = new Pagamento(Guid.NewGuid(), Guid.NewGuid(), 150m);
+        pagamento.DefinirCobranca("pref-1", null);
+        pagamento.Aprovar();
+        await Seed(pagamento);
+
+        await Consumir(new EstornarPagamento(pagamento.OrdemServicoId, "execução falhou"));
+
+        Assert.Null(_harness.Consumed.Select<EstornarPagamento>().Single().Exception);
+        Assert.True(await _harness.Published.Any<PagamentoEstornado>());
+        _gateway.Verify(g => g.EstornarAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
+        await using var db = Apoio.NovoDb(_dbName);
+        Assert.Equal(StatusPagamento.Estornado, (await db.Pagamentos.SingleAsync()).Status);
+    }
+
+    [Fact]
     public async Task EstornarPagamento_nao_aprovado_ou_inexistente_falha_sem_chamar_gateway()
     {
         var pendente = new Pagamento(Guid.NewGuid(), Guid.NewGuid(), 150m);
