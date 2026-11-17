@@ -176,3 +176,4 @@ Sem credenciais o serviço usa o **gateway fake** e tudo funciona pela rota `/si
 
 > Observação: o estorno usa o id do pagamento recebido pelo webhook. Um pagamento aprovado pela rota `/simular` com o
 > gateway real não tem pagamento no MP para estornar — `/simular` é para o gateway fake e para a demo.
+
